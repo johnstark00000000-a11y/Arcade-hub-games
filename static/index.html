@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArcadeCraft - Universal Game Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #0b0f19; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; }
+    .neon-glow { text-shadow: 0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(147, 51, 234, 0.3); }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.3); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Navigation -->
+  <nav class="border-b border-gray-800 bg-gray-900/80 backdrop-blur fixed top-0 w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center font-bold text-xl shadow-lg">
+          <i class="fa-solid fa-gamepad"></i>
+        </div>
+        <span class="text-xl font-extrabold tracking-wider bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">ArcadeCraft</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <button onclick="openUploadModal()" class="px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold hover:opacity-90 transition flex items-center gap-2 shadow-lg shadow-cyan-500/20">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Upload Game
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 pt-24 pb-12 flex-1 w-full">
+    <!-- Header Banner -->
+    <div class="p-8 rounded-2xl bg-gradient-to-r from-cyan-900/40 via-purple-900/30 to-gray-900 border border-gray-800 mb-8 relative overflow-hidden">
+      <div class="relative z-10">
+        <h1 class="text-3xl font-black mb-2 neon-glow">Universal Game Portal & Hosting Engine</h1>
+        <p class="text-gray-400 max-w-2xl">Play, host, and publish HTML5, Python (Pygame via Pygbag), WebAssembly, Java & JavaScript games seamlessly.</p>
+        <div class="flex gap-2 mt-4 flex-wrap text-xs">
+          <span class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"><i class="fa-brands fa-python"></i> Python Pygame</span>
+          <span class="px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/30"><i class="fa-brands fa-js"></i> HTML5 & JS</span>
+          <span class="px-3 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/30"><i class="fa-brands fa-java"></i> Java Applets</span>
+          <span class="px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/30"><i class="fa-solid fa-cube"></i> WASM / WebGL</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Games Grid -->
+    <div id="gamesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Dynamic Games Rendered Here -->
+    </div>
+  </main>
+
+  <!-- Upload Modal -->
+  <div id="uploadModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 max-w-lg w-full relative">
+      <button onclick="closeUploadModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+      <h2 class="text-2xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">Upload Your Game</h2>
+      
+      <form id="uploadForm" class="space-y-4">
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">Game Title</label>
+          <input type="text" id="gameTitle" required class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" placeholder="e.g. Super Cyber Runner">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs text-gray-400 mb-1">Category</label>
+            <select id="gameCategory" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+              <option>Arcade</option>
+              <option>Action</option>
+              <option>Puzzle</option>
+              <option>Retro Python</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-gray-400 mb-1">Tech / Engine</label>
+            <select id="gameTech" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+              <option>HTML5 / JS</option>
+              <option>Python (Pygbag Zip)</option>
+              <option>Java WASM</option>
+              <option>Single File HTML</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">Admin Security PIN (Render Env)</label>
+          <input type="password" id="adminPin" required class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" placeholder="Enter ADMIN_PIN">
+        </div>
+
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">Upload Game (.zip bundle or .html)</label>
+          <input type="file" id="gameFile" accept=".zip,.html" class="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-cyan-500/20 file:text-cyan-400 hover:file:bg-cyan-500/30">
+        </div>
+
+        <div class="text-center text-xs text-gray-500">OR</div>
+
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">Paste HTML5 / JS Code Direct</label>
+          <textarea id="gameCode" rows="4" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2.5 text-xs text-white font-mono focus:outline-none focus:border-cyan-500" placeholder="<!DOCTYPE html><html>..."></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg font-bold hover:opacity-90 transition">Publish Game</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Player Modal -->
+  <div id="playerModal" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-5xl overflow-hidden flex flex-col h-[85vh]">
+      <div class="p-4 border-b border-gray-800 flex justify-between items-center bg-gray-900/50">
+        <h3 id="playerTitle" class="font-bold text-lg text-cyan-400">Game Playing</h3>
+        <button onclick="closePlayerModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+      </div>
+      <div class="flex-1 bg-black relative">
+        <iframe id="gameIframe" class="w-full h-full border-0"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const sampleBrickBreaker = `<!DOCTYPE html><html><head><style>body{margin:0;background:#05050d;display:flex;justify-content:center;align-items:center;height:100vh;color:#fff;font-family:sans-serif;}canvas{border:2px solid #00f0ff;box-shadow:0 0 20px #00f0ff;background:#000;}</style></head><body><canvas id="c" width="480" height="320"></canvas><script>const c=document.getElementById("c"),ctx=c.getContext("2d");let x=c.width/2,y=c.height-30,dx=2,dy=-2,r=8,pw=75,px=(c.width-pw)/2;document.addEventListener("mousemove",e=>{const rect=c.getBoundingClientRect();px=e.clientX-rect.left-pw/2;});function draw(){ctx.clearRect(0,0,c.width,c.height);ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle="#00f0ff";ctx.fill();ctx.closePath();ctx.beginPath();ctx.rect(px,c.height-10,pw,10);ctx.fillStyle="#ff007f";ctx.fill();ctx.closePath();if(x+dx>c.width-r||x+dx<r)dx=-dx;if(y+dy<r)dy=-dy;else if(y+dy>c.height-r){if(x>px&&x<px+pw)dy=-dy;else{x=c.width/2;y=c.height-30;dx=2;dy=-2;}}x+=dx;y+=dy;requestAnimationFrame(draw);}draw();<\/script></body></html>`;
+
+    async function fetchGames() {
+      try {
+        const res = await fetch('/api/games');
+        const games = await res.json();
+        renderGames(games);
+      } catch (e) {
+        console.error("Error loading games", e);
+      }
+    }
+
+    function renderGames(games) {
+      const grid = document.getElementById('gamesGrid');
+      grid.innerHTML = games.map(g => `
+        <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 card-hover transition duration-300 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-start mb-3">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">\${g.tech || 'HTML5'}</span>
+              <span class="text-xs text-gray-500"><i class="fa-solid fa-gamepad"></i> \${g.category}</span>
+            </div>
+            <h3 class="text-lg font-bold mb-2 text-white">\${g.title}</h3>
+          </div>
+          <button onclick="playGame('\${g.id}', '\${g.title}', '\${g.type}')" class="mt-4 w-full py-2.5 rounded-lg bg-gray-800 hover:bg-cyan-600 transition font-semibold text-sm flex items-center justify-center gap-2">
+            <i class="fa-solid fa-play text-xs"></i> Play Game
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function playGame(id, title, type) {
+      document.getElementById('playerTitle').innerText = title;
+      const iframe = document.getElementById('gameIframe');
+      if (id === 'preset-1') {
+        iframe.srcdoc = sampleBrickBreaker;
+      } else {
+        iframe.src = `/games/\${id}/index.html`;
+      }
+      document.getElementById('playerModal').classList.remove('hidden');
+      document.getElementById('playerModal').classList.add('flex');
+    }
+
+    function closePlayerModal() {
+      document.getElementById('gameIframe').src = '';
+      document.getElementById('gameIframe').srcdoc = '';
+      document.getElementById('playerModal').classList.add('hidden');
+    }
+
+    function openUploadModal() {
+      document.getElementById('uploadModal').classList.remove('hidden');
+      document.getElementById('uploadModal').classList.add('flex');
+    }
+
+    function closeUploadModal() {
+      document.getElementById('uploadModal').classList.add('hidden');
+    }
+
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const pin = document.getElementById('adminPin').value;
+      const title = document.getElementById('gameTitle').value;
+      const category = document.getElementById('gameCategory').value;
+      const tech = document.getElementById('gameTech').value;
+      const fileInput = document.getElementById('gameFile');
+      const code = document.getElementById('gameCode').value;
+
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('category', category);
+      formData.append('tech', tech);
+      formData.append('pin', pin);
+
+      if (fileInput.files.length > 0) {
+        formData.append('file', fileInput.files[0]);
+      } else if (code.trim() !== '') {
+        formData.append('file', new Blob([code], { type: 'text/html' }), 'index.html');
+      } else {
+        alert('Please upload a file or paste game code!');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/games/upload', {
+          method: 'POST',
+          headers: { 'X-Admin-Pin': pin },
+          body: formData
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          alert('Game uploaded successfully!');
+          closeUploadModal();
+          fetchGames();
+        } else {
+          alert('Error: ' + data.error);
+        }
+      } catch (err) {
+        alert('Failed to upload game.');
+      }
+    });
+
+    fetchGames();
+  </script>
+</body>
+</html>
