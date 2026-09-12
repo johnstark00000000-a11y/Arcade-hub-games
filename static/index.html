@@ -140,12 +140,12 @@
         <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 card-hover transition duration-300 flex flex-col justify-between">
           <div>
             <div class="flex justify-between items-start mb-3">
-              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">\${g.tech || 'HTML5'}</span>
-              <span class="text-xs text-gray-500"><i class="fa-solid fa-gamepad"></i> \${g.category}</span>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">${g.tech || 'HTML5'}</span>
+              <span class="text-xs text-gray-500"><i class="fa-solid fa-gamepad"></i> ${g.category}</span>
             </div>
-            <h3 class="text-lg font-bold mb-2 text-white">\${g.title}</h3>
+            <h3 class="text-lg font-bold mb-2 text-white">${g.title}</h3>
           </div>
-          <button onclick="playGame('\${g.id}', '\${g.title}', '\${g.type}')" class="mt-4 w-full py-2.5 rounded-lg bg-gray-800 hover:bg-cyan-600 transition font-semibold text-sm flex items-center justify-center gap-2">
+          <button onclick="playGame('${g.id}', '${g.title}', '${g.type}')" class="mt-4 w-full py-2.5 rounded-lg bg-gray-800 hover:bg-cyan-600 transition font-semibold text-sm flex items-center justify-center gap-2">
             <i class="fa-solid fa-play text-xs"></i> Play Game
           </button>
         </div>
@@ -158,7 +158,7 @@
       if (id === 'preset-1') {
         iframe.srcdoc = sampleBrickBreaker;
       } else {
-        iframe.src = `/games/\${id}/index.html`;
+        iframe.src = `/games/${id}/index.html`;
       }
       document.getElementById('playerModal').classList.remove('hidden');
       document.getElementById('playerModal').classList.add('flex');
